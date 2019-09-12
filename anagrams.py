@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """ anagrams
     Command line interface that accepts a word file and returns a dictionary of
@@ -11,6 +11,8 @@
 __author__ = "???"
 
 import sys
+from collections import defaultdict
+import bisect
 
 
 def alphabetize(string):
@@ -24,7 +26,10 @@ def alphabetize(string):
         abc
 
     """
-    return "".join(sorted(string.lower()))
+    charlist = []
+    for char in string[0:]:
+        bisect.insort(charlist, char)
+    return "".join(charlist)
 
 
 def find_anagrams(words):
@@ -39,12 +44,10 @@ def find_anagrams(words):
         {'dgo': ['dog'], 'act': ['cat', 'act']}
 
     """
-    anagrams = {
-        alphabetize(word): [
-            w for w in words
-            if alphabetize(w) == alphabetize(word)]
-        for word in words}
-    return anagrams
+    anagrams = defaultdict(list)
+    for word in words:
+        anagrams[alphabetize(word)].append(word)
+    return dict(anagrams)
 
 
 if __name__ == "__main__":
@@ -54,5 +57,5 @@ if __name__ == "__main__":
         sys.exit(1)
     else:
         with open(sys.argv[1], 'r') as handle:
-            words = handle.read().split()
+            words = handle.read().decode("utf-8-sig").encode("utf-8").split()
             print find_anagrams(words)
