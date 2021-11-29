@@ -27,7 +27,7 @@ def alphabetize(string):
 
     """
     charlist = []
-    for char in string[0:]:
+    for char in string:
         bisect.insort(charlist, char)
     return "".join(charlist)
 
